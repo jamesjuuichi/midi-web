@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+    <link href="src/s.scss" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="controls">
+      <p id="instrument" class="control-title">Instrument</p>
+      <div id="instrument-select-wrapper">
+        <select id="instrument-select">
+          <option selected="selected"></option
+        ></select>
+        <div id="instrument-options">
+          <p class="instrument-option">
+            bass
+          </p>
+          <p class="instrument-option">
+            piano
+          </p>
+          <p class="instrument-option">
+            flute
+          </p>
+          <p class="instrument-option">
+            viola
+          </p>
+          <p class="instrument-option">
+            violin
+          </p>
+          <p class="instrument-option">
+            guitar
+          </p>
+          <p class="instrument-option">
+            gunshot
+          </p>
+          <p class="instrument-option">
+            bagpipe
+          </p>
+        </div>
+      </div>
+      <button id="refresh-connection">Refresh</button>
+      <p id="connection-status" class="not-connected control-title"></p>
+    </div>
+    <div id="app"></div>
+
+    <script src="src/index.ts"></script>
+  </body>
+</html>
