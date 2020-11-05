@@ -154,3 +154,17 @@ export const toDataSetMapping: {
   bagpipe: "bagpipe",
   banjo: "banjo"
 };
+
+export const toFriendlyMapping: {
+  [K in typeof instrumentNames[number]]: typeof friendlyInstrumentNames[number];
+} = {
+  electric_bass_finger: "bass",
+  acoustic_grand_piano: "piano",
+  flute: "flute",
+  viola: "viola",
+  violin: "violin",
+  gunshot: "gunshot",
+  acoustic_guitar_steel: "guitar",
+  bagpipe: "bagpipe",
+  banjo: "banjo"
+};

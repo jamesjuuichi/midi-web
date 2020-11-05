@@ -1,25 +1,26 @@
 // Mutable state, nothing is atomic, don't destruct state.
 ///  <reference types="@types/webmidi"/>
 import { instrumentNames } from "./instruments";
+import { MK2Colors } from "./constants";
 import Soundfont from "soundfont-player";
 
 type SubGridState = {
-  instrument: string;
-  startNote: string;
-  color: 0;
+  instrument: typeof instrumentNames[number] | null;
+  startNote: string | null;
+  color: number;
 };
 
 const defaultSubGridState: SubGridState = {
-  instrument: "",
-  startNote: "",
+  instrument: null,
+  startNote: null,
   color: 0
 };
 
-enum SubGrid {
-  topLeft,
-  topRight,
-  bottomLeft,
-  bottomRight
+export enum SubGrid {
+  topLeft = "topLeft",
+  topRight = "topRight",
+  bottomLeft = "bottomLeft",
+  bottomRight = "bottomRight"
 }
 
 type SubGridParts = {
@@ -46,10 +47,10 @@ const state: State = {
   midiOutput: null,
   activeGrid: null,
   activeInstrument: null,
-  topLeft: { ...defaultSubGridState },
-  topRight: { ...defaultSubGridState },
-  bottomLeft: { ...defaultSubGridState },
-  bottomRight: { ...defaultSubGridState },
+  topLeft: { ...defaultSubGridState, color: MK2Colors.cyan },
+  topRight: { ...defaultSubGridState, color: MK2Colors.red },
+  bottomLeft: { ...defaultSubGridState, color: MK2Colors.yellow },
+  bottomRight: { ...defaultSubGridState, color: MK2Colors.violet },
   instruments: {}
 };
 

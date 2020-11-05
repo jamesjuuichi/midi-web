@@ -6,6 +6,7 @@ $buttonHoverBackground: rgba(255, 255, 255, 0.12);
 $buttonActiveBackground: rgba(255, 255, 255, 0.15);
 $transitionTime: 0.2s;
 $buttonBorderRadius: 2px;
+$rowHeight: 24px;
 
 body {
   margin: 0;
@@ -37,34 +38,34 @@ button {
 }
 #controls {
   padding: $gap;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   position: absolute;
   right: $padding;
   top: $padding;
   display: grid;
-  grid-template: repeat(2, 24px) / 15ch 12ch;
+  grid-template-rows: repeat(2, $rowHeight);
+  grid-template-columns: $rowHeight $rowHeight 15ch 12ch;
+  grid-template-areas: 
+    "dot1 dot2 instrument refresh"
+    "dot3 dot4 instrument-select status";
   gap: $gap;
   transition: max-width $transitionTime;
   max-width: 12ch;
   justify-content: end;
   overflow: hidden;
   &.expanded {
-    max-width: 15ch + 12ch + $gap * 3;
+    max-width: calc(15ch + 12ch + #{$gap} * 5 + #{$rowHeight} + #{$rowHeight});
   }
   &.overflow-visible {
     overflow: visible;
   }
 }
-#refresh-connection {
-  place-self: stretch;
-  grid-area: 1 / 2 / 2 / 3;
-}
 
-#instrument-select-wrapper {
+.select-wrapper {
   position: relative;
 }
-#instrument-options {
+.options {
   left: 0;
   right: 0;
   position: absolute;
@@ -75,26 +76,30 @@ button {
   border-radius: $buttonBorderRadius;
 }
 
-#instrument-select {
+.select {
   background: $buttonBackground;
   border: none;
   text-transform: capitalize;
   border-radius: $buttonBorderRadius;
   color: $textColor;
   font-size: 12px;
-  outline: 0;
   width: 100%;
   height: 100%;
+  line-height: $rowHeight;
+  padding: 0 1ch;
+  box-sizing: border-box;
+  transition: background $transitionTime;
   &:hover {
     background: $buttonHoverBackground;
   }
-  > option {
-    display: none;
+  &.disabled, &.active {
+    background: $buttonActiveBackground;
+    pointer-events: none;
   }
   cursor: pointer;
 }
 
-.instrument-option {
+.option {
   font-size: 12px;
   background: $buttonHoverBackground;
   padding: ($gap / 2);
@@ -103,10 +108,19 @@ button {
   &:hover {
     background: $buttonActiveBackground;
   }
+  &:last-child {
+    border-bottom-left-radius: $buttonBorderRadius;
+    border-bottom-right-radius: $buttonBorderRadius;
+  }
+}
+
+#refresh-connection {
+  place-self: stretch;
+  grid-area: refresh;
 }
 
 #connection-status {
-  grid-area: 2 / 2 / 3 / 3;
+  grid-area: status;
   &.not-connected {
     color: rgba(255, 50, 50, 0.7);
     &:after {
@@ -126,6 +140,89 @@ button {
     }
   }
 }
+#instrument {
+  grid-area: instrument;
+}
+#instrument-select-wrapper {
+  grid-area: instrument-select;
+}
 .control-title {
   place-self: center;
+}
+#dot1 {
+  grid-area: dot1;
+}
+#dot2 {
+  grid-area: dot2;
+}
+#dot3 {
+  grid-area: dot3;
+}
+#dot4 {
+  grid-area: dot4;
+}
+.dot-wrapper {
+  position: relative;
+  place-self: stretch;
+}
+.dot {
+  border-radius: $buttonBorderRadius / 2;
+  width: $rowHeight - 4px;
+  height: $rowHeight - 4px;
+  margin: 2px;
+  opacity: 0.3;
+  &:hover {
+    opacity: 0.5;
+  }
+  &.active {
+    opacity: 0.6;
+    &:after {
+      content: '';
+      display: block;
+      width: $rowHeight;
+      height: $rowHeight;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: $buttonBorderRadius;
+      border: 1px solid currentColor;
+      box-sizing: border-box;
+    }
+  }
+}
+.red {
+  color: rgb(255, 63, 63);
+  background-color: rgb(255, 63, 63);
+}
+.orange {
+  color: rgb(255, 63, 63);
+  background-color: rgb(255, 63, 63);
+}
+.yellow {
+  color: rgb(255, 255, 0);
+  background-color: rgb(255, 255, 0);
+}
+.green {
+  color: rgb(63, 255, 63);
+  background-color: rgb(63, 255, 63);
+}
+.cyan {
+  color: rgb(63, 255, 255);
+  background-color: rgb(63, 255, 255);
+}
+.sky {
+  color: rgb(63, 191, 255);
+  background-color: rgb(63, 191, 255);
+}
+.blue {
+  color: rgb(63, 63, 255);
+  background-color: rgb(63, 63, 255);
+}
+.purple {
+  color: rgb(191, 63, 255);
+  background-color: rgb(191, 63, 255);
+}
+.violet {
+  color: rgb(255, 63, 191);
+  background-color: rgb(255, 63, 191);
 }
