@@ -7,11 +7,13 @@ import {
   isNoteOn,
   findRegion,
   getButtonIndex,
-  getRelativeNote
+  getRelativeNote,
+  noteToNumber
 } from "./launchPadUtils";
 import { TRANSITION_TIME, REGION_STARTS } from "./constants";
 import { toFriendlyMapping } from "./instruments";
 import { fetchInstrument } from "./soundFontPlayer";
+import { debounce } from "./utils";
 
 const MIDITimestamp = {
   startTime: 0
@@ -197,8 +199,12 @@ export function bindSelect(wrapper: HTMLElement) {
       if (state.activeGrid) {
         const activeGrid = state[state.activeGrid];
         activeGrid.instrument = dataSetInstrumentName;
-        // TODO: Become customizeable
         activeGrid.startNote = "C4";
+        // TODO: No directional data binding T_T
+        const rootInput = document.getElementById("root-input");
+        if (rootInput instanceof HTMLInputElement) {
+          rootInput.value = "C4";
+        }
       }
     });
   });
@@ -236,13 +242,22 @@ function setRegionActive(
     activeRegion.children[0].classList.add("active");
   }
   state.activeGrid = regionIndex;
-  const selectInstrument = document.querySelector("#instrument-select");
-  if (selectInstrument && selectInstrument instanceof HTMLDivElement) {
+  const selectInstrument = document.getElementById("instrument-select");
+  if (selectInstrument instanceof HTMLDivElement) {
     const { instrument } = state[regionIndex];
     if (instrument != null) {
       selectInstrument.innerText = toFriendlyMapping[instrument];
     } else {
       selectInstrument.innerText = "";
+    }
+  }
+  const rootInput = document.getElementById("root-input");
+  if (rootInput instanceof HTMLInputElement) {
+    const { startNote } = state[regionIndex];
+    if (startNote) {
+      rootInput.value = startNote;
+    } else {
+      rootInput.value = "";
     }
   }
 
@@ -301,6 +316,41 @@ export function bindRegions(regions: Element[]) {
       setRegionActive(currentActive, region, regionIndex);
       currentActive = region;
     });
+  });
+}
+// #endregion
+// #region Root note
+
+type DebounceContext = { timeoutId?: number };
+const debouncedValidNoteCheck = debounce<DebounceContext>(
+  (context: DebounceContext, inputElement: HTMLInputElement) => {
+    clearTimeout(context.timeoutId);
+    const note = inputElement.value.toUpperCase();
+    const isValid = noteToNumber(note) != null;
+    inputElement.classList.remove("ok", "error");
+    if (isValid) {
+      inputElement.classList.add("ok");
+
+      if (state.activeGrid) {
+        const activeGrid = state[state.activeGrid];
+        activeGrid.startNote = note;
+      }
+    } else {
+      inputElement.classList.add("error");
+    }
+    context.timeoutId = setTimeout(() => {
+      inputElement.classList.remove("ok", "error");
+    }, 800);
+  },
+  400
+);
+export function bindRootNoteInput(input: HTMLElement) {
+  if (!(input instanceof HTMLInputElement)) {
+    return;
+  }
+
+  input.addEventListener("input", () => {
+    debouncedValidNoteCheck(input);
   });
 }
 // #endregion

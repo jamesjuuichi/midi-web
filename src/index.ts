@@ -1,7 +1,8 @@
 import {
   bindLaunchpadControl,
   bindSelect,
-  bindRegions
+  bindRegions,
+  bindRootNoteInput
 } from "./eventListeners";
 bindLaunchpadControl(() => {
   const regions = Array.from(document.querySelectorAll(".dot-wrapper"));
@@ -11,4 +12,9 @@ bindLaunchpadControl(() => {
 const instrumentSelect = document.getElementById("instrument-select-wrapper");
 if (instrumentSelect) {
   bindSelect(instrumentSelect);
+}
+
+const rootInput = document.getElementById("root-input");
+if (rootInput) {
+  bindRootNoteInput(rootInput);
 }

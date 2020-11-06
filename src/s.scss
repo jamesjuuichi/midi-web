@@ -5,6 +5,7 @@ $buttonBackground: rgba(255, 255, 255, 0.1);
 $buttonHoverBackground: rgba(255, 255, 255, 0.12);
 $buttonActiveBackground: rgba(255, 255, 255, 0.15);
 $transitionTime: 0.2s;
+$animationTime: 1s;
 $buttonBorderRadius: 2px;
 $rowHeight: 24px;
 
@@ -45,20 +46,42 @@ button {
   top: $padding;
   display: grid;
   grid-template-rows: repeat(2, $rowHeight);
-  grid-template-columns: $rowHeight $rowHeight 15ch 12ch;
+  grid-template-columns:8ch $rowHeight $rowHeight 15ch 12ch;
   grid-template-areas: 
-    "dot1 dot2 instrument refresh"
-    "dot3 dot4 instrument-select status";
+    "root dot1 dot2 instrument refresh"
+    "root-input dot3 dot4 instrument-select status";
   gap: $gap;
   transition: max-width $transitionTime;
   max-width: 12ch;
   justify-content: end;
   overflow: hidden;
   &.expanded {
-    max-width: calc(15ch + 12ch + #{$gap} * 5 + #{$rowHeight} + #{$rowHeight});
+    max-width: calc(8ch + 15ch + 12ch + #{$gap} * 5 + #{$rowHeight} + #{$rowHeight});
   }
   &.overflow-visible {
     overflow: visible;
+  }
+}
+
+.input {
+  outline: none;
+  background: $buttonBackground;
+  border: none;
+  color: $textColor;
+  padding: 0 1ch;
+  transition: background $transitionTime;
+  cursor: pointer;
+  &:hover {
+    background: $buttonHoverBackground;
+  }
+  &:focus {
+    background: $buttonActiveBackground;
+  }
+  &.error {
+    background: rgba(255, 0, 0, 0.2);
+  }
+  &.ok {
+    background: rgba(0, 255, 0, 0.2);
   }
 }
 
@@ -112,6 +135,14 @@ button {
     border-bottom-left-radius: $buttonBorderRadius;
     border-bottom-right-radius: $buttonBorderRadius;
   }
+}
+
+#root-note {
+  grid-area: root;
+}
+
+#root-input {
+  grid-area: root-input;
 }
 
 #refresh-connection {
