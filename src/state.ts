@@ -39,6 +39,7 @@ type State = SubGridParts & {
   activeGrid: SubGrid | null;
   activeInstrument: typeof instrumentNames[number] | null;
   instruments: Instruments;
+  audioContext: AudioContext | null;
 };
 
 const state: State = {
@@ -47,6 +48,7 @@ const state: State = {
   midiOutput: null,
   activeGrid: null,
   activeInstrument: null,
+  audioContext: null,
   topLeft: { ...defaultSubGridState, color: MK2Colors.cyan },
   topRight: { ...defaultSubGridState, color: MK2Colors.red },
   bottomLeft: { ...defaultSubGridState, color: MK2Colors.yellow },

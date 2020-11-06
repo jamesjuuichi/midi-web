@@ -19,7 +19,7 @@ const MIDITimestamp = {
   startTime: 0
 };
 
-// TODO: Not working correctly now
+// TODO: No, we can use the AudioContext.currentTime
 function syncClock(message: WebMidi.MIDIMessageEvent) {
   const newStartTime = performance.now() - message.timeStamp;
   MIDITimestamp.startTime = newStartTime;
@@ -65,7 +65,13 @@ function playActiveInstrument(message: WebMidi.MIDIMessageEvent) {
     if (!region) {
       return;
     }
+    const { audioContext } = state;
     const { instrument, startNote } = state[region];
+
+    if (!audioContext) {
+      console.warn("Audio context not found");
+      return;
+    }
 
     if (!instrument || !startNote) {
       console.warn("Set not configured: " + region);
@@ -81,7 +87,7 @@ function playActiveInstrument(message: WebMidi.MIDIMessageEvent) {
     const note = getRelativeNote(startNote, index);
 
     if (note) {
-      loadedInstrument.play(note);
+      loadedInstrument.play(note, audioContext.currentTime, { duration: 0.5 });
     }
   }
 }
@@ -325,7 +331,7 @@ type DebounceContext = { timeoutId?: number };
 const debouncedValidNoteCheck = debounce<DebounceContext>(
   (context: DebounceContext, inputElement: HTMLInputElement) => {
     clearTimeout(context.timeoutId);
-    const note = inputElement.value.toUpperCase();
+    const note = inputElement.value;
     const isValid = noteToNumber(note) != null;
     inputElement.classList.remove("ok", "error");
     if (isValid) {

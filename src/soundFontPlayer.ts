@@ -10,8 +10,11 @@ export async function fetchInstrument(
   if (state.instruments[instrumentNameInDataSet]) {
     return new Promise((resolve) => resolve(instrumentNameInDataSet));
   }
+  if (!state.audioContext) {
+    state.audioContext = new AudioContext();
+  }
   return Soundfont.instrument(
-    new AudioContext(),
+    state.audioContext,
     instrumentNameInDataSet as Soundfont.InstrumentName
   )
     .then(function (instrument) {
